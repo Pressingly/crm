@@ -3,6 +3,12 @@ import { createResource } from 'frappe-ui'
 import router from '@/router'
 import { ref, computed } from 'vue'
 
+// Set from the page boot under mPass SSO: Frappe's own login page would sign the user straight back in.
+function platformLogoutUrl() {
+  const url = window.mpass_logout_url
+  return typeof url === 'string' && url ? url : null
+}
+
 export const sessionStore = defineStore('crm-session', () => {
   function sessionUser() {
     let cookies = new URLSearchParams(document.cookie.split('; ').join('&'))
@@ -32,7 +38,7 @@ export const sessionStore = defineStore('crm-session', () => {
     url: 'logout',
     onSuccess() {
       user.value = null
-      window.location.href = '/login?redirect-to=/crm'
+      window.location.href = platformLogoutUrl() || '/login?redirect-to=/crm'
     },
   })
 

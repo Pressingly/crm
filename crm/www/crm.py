@@ -89,8 +89,18 @@ def get_boot():
 				or get_system_timezone(),
 			},
 			"state_options": get_state_options(),
+			"mpass_logout_url": get_mpass_logout_url(),
 		}
 	)
+
+
+def get_mpass_logout_url() -> str | None:
+	"""The platform logout URL the Pressingly/frappe fork gives Desk under mPass SSO; None elsewhere."""
+	try:
+		from frappe.mpass_sso import logout_redirect_url
+	except ImportError:
+		return None
+	return logout_redirect_url()
 
 
 def get_cloud_settings() -> dict:
